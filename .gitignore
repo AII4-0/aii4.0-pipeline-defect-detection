@@ -1,0 +1,10 @@
+# Macos Specific
+.DS_Store
+
+# Python
+__pycache__/
+.venv
+
+# PyTorch Lightning
+/lightning_logs
+/data

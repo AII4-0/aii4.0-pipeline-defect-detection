@@ -1,0 +1,190 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python -m src.main prepare
+    deps:
+    - path: data/datasets
+      md5: 3891b3e66791f350fa63e5b038123ddf.dir
+      size: 216335325
+      nfiles: 1256
+    - path: src/data_modules
+      md5: 75379f1180aa50be1fbc0fdec59b1016.dir
+      size: 20190
+      nfiles: 4
+    - path: src/datasets
+      md5: 2aaa34e3dca8d9d014b9c2983dd4174a.dir
+      size: 5254
+      nfiles: 2
+    - path: src/prepare.py
+      md5: f5b29246baab98cafa1b9a76878e1d88
+      size: 1748
+    params:
+      params.yaml:
+        prepare:
+          seed: 64
+          dataset_path: data/datasets/serie02_plus_serie01_cv2
+          out_path: out/prepared
+          max_images: 500
+          imbalance_ratio: 2
+          img_shape:
+          - 1
+          - 64
+          - 64
+          train_split: 0.8
+          apply_transforms: true
+          batch_size: 16
+    outs:
+    - path: out/prepared/plots
+      md5: 61a2ddf6182d1fe775fc6072bacb3fa1.dir
+      size: 6519
+      nfiles: 16
+  train:
+    cmd: python -m src.main train
+    deps:
+    - path: data/datasets
+      md5: 3891b3e66791f350fa63e5b038123ddf.dir
+      size: 216335325
+      nfiles: 1256
+    - path: out/prepared
+      md5: 55bbf83a49ed80a1d7ec4a64320c8f95.dir
+      size: 24609
+      nfiles: 19
+    - path: src/data_modules
+      md5: 75379f1180aa50be1fbc0fdec59b1016.dir
+      size: 20190
+      nfiles: 4
+    - path: src/datasets
+      md5: 2aaa34e3dca8d9d014b9c2983dd4174a.dir
+      size: 5254
+      nfiles: 2
+    - path: src/models
+      md5: 081bc6d627b2c88843408a0047ee04af.dir
+      size: 21106
+      nfiles: 6
+    - path: src/train.py
+      md5: e966f7d299e085c49359ec1c67cc94f4
+      size: 2201
+    params:
+      params.yaml:
+        prepare:
+          seed: 64
+          dataset_path: data/datasets/serie02_plus_serie01_cv2
+          out_path: out/prepared
+          max_images: 500
+          imbalance_ratio: 2
+          img_shape:
+          - 1
+          - 64
+          - 64
+          train_split: 0.8
+          apply_transforms: true
+          batch_size: 16
+        train:
+          seed: 653
+          model_name: cnn_defect_detector_v1
+          max_epochs: 8
+          lr: 0.00015
+          dropout: 0.3
+          convs:
+          - 16
+          - 32
+          - 64
+          - 128
+          hiddens:
+          - 256
+          - 128
+          num_classes: 1
+          num_workers: 4
+          out_path: out/train
+          model_save_path: out/train/models/model.ckpt
+    outs:
+    - path: lightning_logs
+      md5: 4d98a59d5dc08e5c02bc4c0c904eca53.dir
+      size: 8467582
+      nfiles: 3
+    - path: out/train/metrics.json
+      md5: 83e7ff0e5481c075defc8f18a8b1ef56
+      size: 138
+  evaluate:
+    cmd: python -m src.main evaluate
+    deps:
+    - path: out/prepared
+      md5: 55bbf83a49ed80a1d7ec4a64320c8f95.dir
+      size: 24609
+      nfiles: 19
+    - path: out/train
+      md5: 66419572553061933d0d9f12738682af.dir
+      size: 7897623
+      nfiles: 8
+    - path: src/data_modules
+      md5: 75379f1180aa50be1fbc0fdec59b1016.dir
+      size: 20190
+      nfiles: 4
+    - path: src/datasets
+      md5: 2aaa34e3dca8d9d014b9c2983dd4174a.dir
+      size: 5254
+      nfiles: 2
+    - path: src/evaluate.py
+      md5: d24706460df9ac548a828f98312b0a36
+      size: 2463
+    params:
+      params.yaml:
+        evaluate:
+          out_path: out/evaluation
+        prepare:
+          seed: 64
+          dataset_path: data/datasets/serie02_plus_serie01_cv2
+          out_path: out/prepared
+          max_images: 500
+          imbalance_ratio: 2
+          img_shape:
+          - 1
+          - 64
+          - 64
+          train_split: 0.8
+          apply_transforms: true
+          batch_size: 16
+        train:
+          seed: 653
+          model_name: cnn_defect_detector_v1
+          max_epochs: 8
+          lr: 0.00015
+          dropout: 0.3
+          convs:
+          - 16
+          - 32
+          - 64
+          - 128
+          hiddens:
+          - 256
+          - 128
+          num_classes: 1
+          num_workers: 4
+          out_path: out/train
+          model_save_path: out/train/models/model.ckpt
+    outs:
+    - path: out/evaluation/metrics.json
+      md5: f03dee62171c9cbcfe8353087bb970c9
+      size: 151
+    - path: out/evaluation/plots
+      md5: 935571115fb4626df500695a9964425c.dir
+      size: 58597
+      nfiles: 7
+  export:
+    cmd: python -m src.main export
+    deps:
+    - path: out/train
+      md5: 66419572553061933d0d9f12738682af.dir
+      size: 7897623
+      nfiles: 8
+    - path: src/export.py
+      md5: ae64b0c50fdd3c7310add54c150ed75f
+      size: 1368
+    params:
+      params.yaml:
+        export:
+          out_path: out/export
+    outs:
+    - path: out/export/model.onnx
+      md5: 865ad96444a5a386551e509b3b33cc45
+      size: 2622601

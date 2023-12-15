@@ -1,0 +1,17 @@
+service: "src.service:svc"
+labels:
+  owner: aii40-so3-pipeline3
+  stage: dev
+include:
+  - "src/service.py"
+  - "src/utils/preprocessing.py"
+python:
+  requirements_txt: "./requirements/requirements-api.txt"
+docker:
+  system_packages:
+    # for opencv
+    - ffmpeg
+    - libsm6
+    - libxext6
+models:
+  - onnx_defect_detection_api:latest

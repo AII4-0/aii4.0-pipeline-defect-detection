@@ -1,0 +1,60 @@
+stages:
+  prepare:
+    cmd: python -m src.main prepare
+    params:
+      - prepare
+    deps:
+      - src/prepare.py
+      - src/datasets
+      - src/data_modules
+      - data/datasets
+    plots:
+      - out/prepared/plots:
+          cache: false
+
+  train:
+    cmd: python -m src.main train
+    params:
+      - prepare
+      - train
+    deps:
+      - out/prepared
+      - src/train.py
+      - src/models
+      - src/datasets
+      - src/data_modules
+      - data/datasets
+    outs:
+      - lightning_logs
+    metrics:
+      - out/train/metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python -m src.main evaluate
+    params:
+      - prepare
+      - train
+      - evaluate
+    deps:
+      - out/prepared
+      - out/train
+      - src/evaluate.py
+      - src/datasets
+      - src/data_modules
+    metrics:
+      - out/evaluation/metrics.json:
+          cache: false
+    plots:
+      - out/evaluation/plots:
+          cache: false
+
+  export:
+    cmd: python -m src.main export
+    params:
+      - export
+    deps:
+      - out/train
+      - src/export.py
+    outs:
+      - ${export.out_path}/model.onnx

@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "aii40-so3-pipeline3"
+version = "0.0.0"
+description = "MLOps integration for defect detection"
+authors = ["Leonard Cseres <leonard.cseres@heig-vd.ch>", "Rémy Marquis <remy.marquis@heig-vd.ch>"]
+license = "3-Clause BSD License"
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+torch = "^2.0.0"
+torchvision = "^0.15.1"
+pytorch-lightning = "^2.0.1.post0"
+pillow = "^9.5.0"
+dvc = {extras = ["gs"], version = "^3.33.4"}
+dvclive = "^2.6.3"
+opencv-python = "^4.8.1.78"
+torchsummary = "^1.5.1"
+grad-cam = "^1.4.8"
+seaborn = "^0.13.0"
+torchmetrics = "^1.2.1"
+gradio = "^4.8.0"
+onnx = "^1.15.0"
+onnxruntime = "^1.16.3"
+bentoml = "^1.1.10"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
+pre-commit = "^3.2.2"
+black = "^23.3.0"
+# Version 2.12 is not compatible yet with Safai on macos
+tensorboard = ">=2.11.2,<2.12"
+
+[tool.black]
+line-length = 88
+exclude = '''
+/(
+    \.git
+  | \.idea
+)/
+'''
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
