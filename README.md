@@ -1,4 +1,4 @@
-<h1>AII40-SO3-PIPELINE3</h1>
+# AII 4.0 Pipeline for defect detection
 
 - [Introduction](#introduction)
 - [About](#about)
@@ -29,7 +29,9 @@
 
 ## Introduction
 
-This is a pipeline for the AII40-SO3 project. It is a pipeline that is used to train a model that can be used to predict the defects in a given image.
+This is a pipeline for the AII 4.0 project. It is a pipeline that is used to train a model that
+can be used to visually predict the defects in manufactured cutting tools. It also includes a
+graphical user interface.
 
 ![Prediction Samples](assets/pred_samples.png)
 
@@ -100,6 +102,9 @@ pip install -r requirements/requirements-dev.txt
 ## Usage
 
 ### Authenticate with DVC
+
+> [!NOTE]
+> Due to data confidentiality of our industrial partner, the data used in this project is not publicly available.
 
 First, make sure you have authenticated with the DVC remote (Google Cloud Storage). You can do so by running the following command:
 
@@ -217,6 +222,7 @@ pre-commit install
 
 ## References
 
-- DVC Remote with Google Cloud Storage - https://dvc.org/doc/user-guide/data-management/remote-storage/google-cloud-storage
-- Gradio Docuemntation - https://www.gradio.app/docs
-- BentoML Documentation - https://docs.bentoml.com/en/latest
+- [DVC Remote with Google Cloud Storage](https://dvc.org/doc/user-guide/data-management/remote-storage/google-cloud-storage)
+- [Gradio Documentation](https://www.gradio.app/docs)
+- [BentoML Documentation](https://docs.bentoml.com/en/latest)
+
