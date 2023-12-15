@@ -12,6 +12,9 @@
     - [With CUDA](#with-cuda)
     - [Without CUDA](#without-cuda)
 - [Usage](#usage)
+  - [Authenticate with DVC](#authenticate-with-dvc)
+  - [Fetch the Data](#fetch-the-data)
+  - [Reproduce the Pipeline](#reproduce-the-pipeline)
   - [View Logs](#view-logs)
   - [Demo](#demo)
     - [Running the demo](#running-the-demo)
@@ -22,6 +25,7 @@
 - [Data](#data-1)
 - [Contributing](#contributing)
   - [Install pre-commit hooks](#install-pre-commit-hooks)
+- [References](#references)
 
 ## Introduction
 
@@ -53,7 +57,7 @@ The pipeline has the following stages:
 ## Pre-requisites
 
 - Python>=3.8
-- [Poetry](https://python-poetry.org/docs/#installation)
+- (Optional) [Poetry](https://python-poetry.org/docs/#installation)
 
 ## Installation
 
@@ -95,10 +99,23 @@ pip install -r requirements/requirements-dev.txt
 
 ## Usage
 
-First, run the pipeline with the following command:
+### Authenticate with DVC
+
+First, make sure you have authenticated with the DVC remote (Google Cloud Storage). You can do so by running the following command:
 
 ```bash
-dvc repro
+dvc remote modify --local data \
+                    credentialpath 'path/to/project-XXX.json'
+```
+
+> Where `path/to/project-XXX.json` is the path to the JSON file containing the credentials for the Google Cloud Storage bucket.
+
+### Fetch the Data
+
+Then, you can pull the experiment data with the following command:
+
+```bash
+dvc pull
 ```
 
 This will create the following directories:
@@ -108,6 +125,14 @@ This will create the following directories:
 - `out/train` - contains the trained model weights
 - `out/evaluation` - contains the evaluation metrics and plots (confusion matrix and ROC curve)
 - `out/exported` - contains the exported model in ONNX format
+
+### Reproduce the Pipeline
+
+To reproduce the pipeline, run the following command:
+
+```bash
+dvc repro
+```
 
 ### View Logs
 
@@ -189,3 +214,9 @@ Currently as the data is limited, it is difficult to accurately test and evaluat
 ```bash
 pre-commit install
 ```
+
+## References
+
+- DVC Remote with Google Cloud Storage - https://dvc.org/doc/user-guide/data-management/remote-storage/google-cloud-storage
+- Gradio Docuemntation - https://www.gradio.app/docs
+- BentoML Documentation - https://docs.bentoml.com/en/latest
